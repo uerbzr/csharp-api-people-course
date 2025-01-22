@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using workshop.wwwapi.Data;
+using workshop.wwwapi.Endpoints;
 using workshop.wwwapi.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,10 +23,14 @@ if (app.Environment.IsDevelopment())
     });
     app.MapScalarApiReference();
 }
-
+// ensure db context is created with seeded data
+using (var dbContext = new DataContext(new DbContextOptions<DataContext>()))
+{
+    dbContext.Database.EnsureCreated();
+}
 app.UseHttpsRedirection();
 
-
+app.ConfigurePeople();
 
 app.Run();
 

@@ -7,22 +7,25 @@ namespace workshop.wwwapi.Endpoints
 {
     public static class PeopleEndpoints
     {
-        public static void Configure(this WebApplication app)
+        public static void ConfigurePeople(this WebApplication app)
         {
             var people = app.MapGroup("/people");
 
-
+            people.MapGet("/", GetAll);
+            people.MapPost("/", Add);
+            people.MapDelete("/{id}", Delete);
+            people.MapPut("/{id}", Update);
 
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetPets(IRepository repository)
+        public static async Task<IResult> GetAll(IRepository repository)
         {
             var results = await repository.GetAll();
             return TypedResults.Ok(results);
         }
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> AddPet(IRepository repository, PersonPost model)
+        public static async Task<IResult> Add(IRepository repository, PersonPost model)
         {
             try
             {
@@ -30,7 +33,8 @@ namespace workshop.wwwapi.Endpoints
                 Person person = new Person()
                 {
                     Name = model.Name,                   
-                    Age = model.Age
+                    Age = model.Age,
+                    Email = model.Email
                 };
                 await repository.Add(person);
 
@@ -44,7 +48,7 @@ namespace workshop.wwwapi.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> DeletePerson(IRepository repository, int id)
+        public static async Task<IResult> Delete(IRepository repository, int id)
         {
             try
             {
@@ -60,7 +64,7 @@ namespace workshop.wwwapi.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> UpdatePerson(IRepository repository, int id, PersonPut model)
+        public static async Task<IResult> Update(IRepository repository, int id, PersonPut model)
         {
             try
             {
