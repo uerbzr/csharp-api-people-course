@@ -487,5 +487,6 @@ $RECYCLE.BIN/
 */**/bin/Release   
 */**/obj/Debug   
 */**/obj/Release   
+*/Migrations
 /workshop.wwwapi/appsettings.json
 /workshop.wwwapi/appsettings.Development.json
