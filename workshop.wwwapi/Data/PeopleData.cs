@@ -3,7 +3,7 @@ using workshop.wwwapi.Models;
 
 namespace workshop.wwwapi.Data
 {
-    public class Seeder
+    public class PeopleData
     {
         private List<string> _firstnames = new List<string>()
         {
@@ -111,11 +111,11 @@ namespace workshop.wwwapi.Data
         public List<Person> People { get { return _people; } }
 
 
-        public Seeder()
+        public PeopleData()
         {
             Random authorRandom = new Random();
-            Random postRandom = new Random();
-            Random commentRandom = new Random();
+            Random ageRandom = new Random();
+            
 
             for (int x = 1; x < 1000; x++)
             {
@@ -126,6 +126,8 @@ namespace workshop.wwwapi.Data
 
                 person.Name =  $"{firstname} { lastname}";
                 person.Email = $"{firstname}.{lastname}@{_domain[authorRandom.Next(_domain.Count)]}";
+                person.Age = ageRandom.Next(20, 99);
+                person.OfficeId = authorRandom.Next(1, 3);
                 _people.Add(person);
             }
 

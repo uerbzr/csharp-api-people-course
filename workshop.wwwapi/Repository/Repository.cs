@@ -36,7 +36,8 @@ namespace workshop.wwwapi.Repository
         }
         public async Task<IEnumerable<Person>> GetAll()
         {
-            return await _db.People.ToListAsync();
+            return await _db.People.Include(p => p.Courses).ToListAsync();
+            //return await _db.People.ToListAsync();
         }
     }
 }

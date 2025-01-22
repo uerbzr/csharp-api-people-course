@@ -37,5 +37,7 @@ app.UseHttpsRedirection();
 
 app.ConfigurePeople();
 
+app.Seed();
+
 app.Run();
 
