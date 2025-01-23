@@ -35,7 +35,7 @@ This repository comes setup with a
     - provides a /scalar endpoint 
 - Install-Package Swashbuckle.AspNetCore
     - provides a /swagger endpoint
-- Install-Package Microsoft.EntityFrameworkCore
+- Install-Package Microsoft.EntityFrameworkCore.Design
 - Install-Package Microsoft.EntityFrameworkCore.InMemory
 
 ## The Many to Many Rabbit Hole
