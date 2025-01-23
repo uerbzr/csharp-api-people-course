@@ -20,8 +20,13 @@ namespace workshop.wwwapi.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         public static async Task<IResult> GetAll(IRepository repository)
         {
+            Payload<List<Person>> payload = new Payload<List<Person>>();
+
+
             var results = await repository.GetAll();
-            return TypedResults.Ok(results);
+            payload.Data = results.ToList();
+
+            return TypedResults.Ok(payload);
         }
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
