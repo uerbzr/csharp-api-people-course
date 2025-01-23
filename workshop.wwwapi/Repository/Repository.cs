@@ -1,43 +1,70 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using workshop.wwwapi.Data;
 using workshop.wwwapi.Models;
 
 namespace workshop.wwwapi.Repository
 {
-    public class Repository : IRepository
+    /// <summary>
+    /// Generic Repository with some basic CRUD
+    /// </summary>
+    /// <typeparam name="T">The generic type with which to perform database operations on</typeparam>
+    public class Repository<T> : IRepository<T> where T : class
     {
         private DataContext _db;
+        private DbSet<T> _table = null!;
 
-        public Repository(DataContext db)
+        public Repository(DataContext dataContext)
         {
-            _db = db;
+            _db = dataContext;
+            _table = _db.Set<T>();
         }
-        public async Task<Person> Add(Person entity)
+
+        public async Task<IEnumerable<T>> Get()
         {
-            await _db.People.AddAsync(entity);
-            await _db.SaveChangesAsync();
+            return _table.ToList();
+        }
+
+        public async Task<T> Insert(T entity)
+        {
+            _table.Add(entity);
+            _db.SaveChanges();
             return entity;
-
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<T> Update(T entity)
         {
-            var target = await _db.People.FindAsync(id);
-            _db.People.Remove(target);
-            await _db.SaveChangesAsync();
-            return true;
-
-
-        }      
-
-        public async Task<Person> Get(int id)
-        {
-            return await _db.People.FindAsync(id);
+            _table.Attach(entity);
+            _db.Entry(entity).State = EntityState.Modified;
+            _db.SaveChanges();
+            return entity;
         }
-        public async Task<IEnumerable<Person>> GetAll()
+
+        public async Task<T> Delete(object id)
         {
-            return await _db.People.Include(p => p.Courses).ToListAsync();
-            //return await _db.People.ToListAsync();
+            T entity = _table.Find(id);
+            _table.Remove(entity);
+            _db.SaveChanges();
+            return entity;
+        }
+
+        public async Task<T> GetById(int id)
+        {            
+            return _table.Find(id);
+        }
+        public async Task<IEnumerable<T>> GetWithIncludes(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _table;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task Save()
+        {
+            _db.SaveChangesAsync();
         }
     }
 }

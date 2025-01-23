@@ -18,30 +18,32 @@ namespace workshop.wwwapi.Endpoints
 
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetAll(IRepository repository)
-        {
-            Payload<List<Person>> payload = new Payload<List<Person>>();
-
-
-            var results = await repository.GetAll();
-            payload.Data = results.ToList();
-
-            return TypedResults.Ok(payload);
+        public static async Task<IResult> GetAll(IRepository<Person> personRepository)
+        {     
+            var results = await personRepository.GetWithIncludes( p => p.CoursePersons, p=>p.Courses, p=>p.Office);      
+            
+            PeopleDTO response = new PeopleDTO();
+            results.ToList().ForEach(p => 
+            {                
+                response.People.Add(new PersonDTO() { Name = p.Name, Age = p.Age, Email = p.Email, Courses=p.Courses.Select(c => c.Title).ToList() }); 
+            
+            });
+            return TypedResults.Ok(response);
         }
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> Add(IRepository repository, PersonPost model)
+        public static async Task<IResult> Add(IRepository<Person> repository, PersonPost model)
         {
             try
             {
 
-                Person person = new Person()
+                Models.Person person = new Models.Person()
                 {
                     Name = model.Name,                   
                     Age = model.Age,
                     Email = model.Email
                 };
-                await repository.Add(person);
+                await repository.Insert(person);
 
                 return TypedResults.Created($"https://localhost:7010/people/{person.Id}", person);
             }
@@ -53,12 +55,12 @@ namespace workshop.wwwapi.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> Delete(IRepository repository, int id)
+        public static async Task<IResult> Delete(IRepository<Person> repository, int id)
         {
             try
             {
-                var model = await repository.Get(id);
-                if (await repository.Delete(id)) return Results.Ok(new { When = DateTime.Now, Status = "Deleted", Name = model.Name, Age = model.Age });
+                var model = await repository.GetById(id);
+                if (await repository.Delete(id)!=null) return Results.Ok(new { When = DateTime.Now, Status = "Deleted", Name = model.Name, Age = model.Age });
                 return TypedResults.NotFound();
             }
             catch (Exception ex)
@@ -69,11 +71,11 @@ namespace workshop.wwwapi.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> Update(IRepository repository, int id, PersonPut model)
+        public static async Task<IResult> Update(IRepository<Person> repository, int id, PersonPut model)
         {
             try
             {
-                var target = await repository.Get(id);
+                var target = await repository.GetById(id);
                 if (target == null) return Results.NotFound();
                 if (model.Name != null) target.Name = model.Name;             
                 if (model.Age != null) target.Age = model.Age.Value;

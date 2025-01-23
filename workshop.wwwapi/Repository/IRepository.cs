@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Linq.Expressions;
 using workshop.wwwapi.Models;
 
 namespace workshop.wwwapi.Repository
 {
-    public interface IRepository
+    public interface IRepository<T>
     {
-        Task<IEnumerable<Person>> GetAll();
-        Task<Person> Get(int id);
-        Task<bool> Delete(int id);
-        Task<Person> Add(Person person);
+        Task<IEnumerable<T>> Get();
+        Task<T> Insert(T entity);
+        Task<T> Update(T entity);
+        Task<T> Delete(object id);
+        Task Save();
+        Task<T> GetById(int id);
+        Task<IEnumerable<T>> GetWithIncludes(params Expression<Func<T, object>>[] includes);
     }
 }

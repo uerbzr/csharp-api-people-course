@@ -3,6 +3,7 @@ using Scalar.AspNetCore;
 using System.Diagnostics;
 using workshop.wwwapi.Data;
 using workshop.wwwapi.Endpoints;
+using workshop.wwwapi.Models;
 using workshop.wwwapi.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IRepository<Person>, Repository<Person>>();
 builder.Services.AddDbContext<DataContext>(options => {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString"));
     options.LogTo(message => Debug.WriteLine(message));
