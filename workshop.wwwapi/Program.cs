@@ -17,6 +17,7 @@ builder.Services.AddDbContext<DataContext>(options => {
     options.LogTo(message => Debug.WriteLine(message));
 
 });
+builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

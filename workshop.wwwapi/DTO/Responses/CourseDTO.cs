@@ -1,4 +1,4 @@
-﻿namespace workshop.wwwapi.DTO
+﻿namespace workshop.wwwapi.DTO.Responses
 {
     public class CourseDTO
     {

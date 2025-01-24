@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using workshop.wwwapi.DTO;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using workshop.wwwapi.DTO.Requests;
+using workshop.wwwapi.DTO.Responses;
 using workshop.wwwapi.Models;
 using workshop.wwwapi.Repository;
 
@@ -18,16 +20,12 @@ namespace workshop.wwwapi.Endpoints
 
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetAll(IRepository<Person> personRepository)
+        public static async Task<IResult> GetAll(IRepository<Person> personRepository, IMapper mapper)
         {     
-            var results = await personRepository.GetWithIncludes( p => p.CoursePersons, p=>p.Courses, p=>p.Office);      
-            
-            PeopleDTO response = new PeopleDTO();
-            results.ToList().ForEach(p => 
-            {                
-                response.People.Add(new PersonDTO() { Name = p.Name, Age = p.Age, Email = p.Email, Courses=p.Courses.Select(c => c.Title).ToList() }); 
-            
-            });
+            var people = await personRepository.GetWithIncludes(p => p.CoursePersons, p=>p.Courses, p=>p.Office);
+
+            var response = mapper.Map<List<PersonDTO>>(people);
+           
             return TypedResults.Ok(response);
         }
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -36,7 +34,7 @@ namespace workshop.wwwapi.Endpoints
         {
             try
             {
-
+                //TODO: convert to AUTO MAPPER - PersonPost to Person
                 Models.Person person = new Models.Person()
                 {
                     Name = model.Name,                   
@@ -59,6 +57,7 @@ namespace workshop.wwwapi.Endpoints
         {
             try
             {
+
                 var model = await repository.GetById(id);
                 if (await repository.Delete(id)!=null) return Results.Ok(new { When = DateTime.Now, Status = "Deleted", Name = model.Name, Age = model.Age });
                 return TypedResults.NotFound();

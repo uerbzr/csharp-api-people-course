@@ -1,4 +1,6 @@
-﻿namespace workshop.wwwapi.DTO
+﻿using workshop.wwwapi.Models;
+
+namespace workshop.wwwapi.DTO.Responses
 {
     /// <summary>
     /// DTO for a Person
@@ -8,6 +10,7 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public int Age { get; set; }
-        public List<string> Courses { get; set; } = new List<string>();
+        public OfficeDTO Office { get; set; }
+        public List<CourseDTO> Courses { get; set; } = new List<CourseDTO>();
     }
 }
