@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IRepository<Person>, Repository<Person>>();
 builder.Services.AddDbContext<DataContext>(options => {
+    //options.UseNpgsql(builder.Configuration.GetConnectionString("LocalDockerInstance"));
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString"));
     options.LogTo(message => Debug.WriteLine(message));
 
@@ -30,6 +31,7 @@ if (app.Environment.IsDevelopment())
     });
     app.MapScalarApiReference();
 }
+
 
 //using (var dbContext = new DataContext(new DbContextOptions<DataContext>()))
 //{

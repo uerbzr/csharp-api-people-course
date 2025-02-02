@@ -21,7 +21,8 @@ namespace workshop.wwwapi.Endpoints
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
         public static async Task<IResult> GetAll(IRepository<Person> personRepository, IMapper mapper)
-        {     
+        {    
+            var result = await personRepository.Get();
             var people = await personRepository.GetWithIncludes(p => p.CoursePersons, p=>p.Courses, p=>p.Office);
 
             var response = mapper.Map<List<PersonDTO>>(people);
@@ -35,11 +36,13 @@ namespace workshop.wwwapi.Endpoints
             try
             {
                 //TODO: convert to AUTO MAPPER - PersonPost to Person
+                
                 Models.Person person = new Models.Person()
                 {
                     Name = model.Name,                   
                     Age = model.Age,
-                    Email = model.Email
+                    Email = model.Email,
+                    OfficeId=1
                 };
                 await repository.Insert(person);
 

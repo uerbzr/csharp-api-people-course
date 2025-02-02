@@ -4,6 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c3dd172f-7d7f-4736-bb14-2855c001b6d7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +21,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="NpgSql.EntityFrameworkCore.PostgreSql" Version="9.0.3" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />

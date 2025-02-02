@@ -31,25 +31,24 @@ namespace workshop.wwwapi.Data
                     PeopleData peopleData = new PeopleData();
                     if (!context.People.Any())
                     {
-                        context.People.AddRange(peopleData.People);
+                        //await context.People.AddRangeAsync(peopleData.People);
+                        Person person = new Person() { Id = 1, Name = "Nigel", Age = 21, Email = "nigel@nigel.nigel", OfficeId = 1 };
+                        await context.People.AddAsync(person);
                         
                     }
                     if(!context.Courses.Any())
                     {
                         CourseData courseData = new CourseData();
-                        context.Courses.AddRange(courseData.Courses);
+                        await context.Courses.AddRangeAsync(courseData.Courses);
                         
                     }
                     if(!context.CoursePerson.Any())
                     {
-                        context.CoursePerson.AddRange(
+                        await context.CoursePerson.AddRangeAsync(
                             new List<CoursePerson>()
                             {
                                 new CoursePerson(){ CourseId=1, PersonId=1 },
-                                new CoursePerson(){ CourseId=1, PersonId=2 },
-                                new CoursePerson(){ CourseId=1, PersonId=3 },
-                                new CoursePerson(){ CourseId=2, PersonId=4 },
-                                new CoursePerson(){ CourseId=2, PersonId=5 },
+                              
 
                             }
                         );

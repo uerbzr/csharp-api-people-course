@@ -13,8 +13,10 @@ namespace workshop.wwwapi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<CoursePerson>().HasNoKey();
-               //.HasKey(cp => new { cp.PersonId, cp.CourseId });
-
+            //.HasKey(cp => new { cp.PersonId, cp.CourseId });
+            modelBuilder.Entity<Person>()
+    .Property(e => e.Id)
+    .ValueGeneratedOnAdd();
             modelBuilder.Entity<Person>()
                 .HasMany(p => p.Courses).WithMany(p => p.People)
                     .UsingEntity<CoursePerson>();
