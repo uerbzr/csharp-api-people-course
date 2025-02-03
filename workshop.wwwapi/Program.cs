@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IRepository<Person>, Repository<Person>>();
 builder.Services.AddDbContext<DataContext>(options => {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("LocalDockerInstance"));
     options.LogTo(message => Debug.WriteLine(message));
 
 });
