@@ -11,8 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IRepository, Repository>();
-builder.Services.AddDbContext<DataContext>(options => {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+builder.Services.AddDbContext<DataContext>(options => {    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString"));
     options.LogTo(message => Debug.WriteLine(message));
 
 });
